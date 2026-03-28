@@ -1,93 +1,96 @@
-val_c1 = 1
-val_c2 = 1
-val_c3 = 1
-val_c4 = 1
-val_c5 = 1
-val_c6 = 1
-val_c7 = 1
-turn = 1
+const columnHeights = [1, 1, 1, 1, 1, 1, 1];
+let turn = 1;
+let gameOver = false;
 
-
-//checking the winner
-
-function check(player) {
-    setTimeout(() => {
-
-        for (i = 1; i <= 7; i++) {
-            for (j = 1; j <= 3; j++) {
-                if (document.getElementById(`c${i}r${j}`).style.backgroundColor == `${player}` && document.getElementById(`c${i}r${j + 1}`).style.backgroundColor == `${player}` && document.getElementById(`c${i}r${j + 2}`).style.backgroundColor == `${player}` && document.getElementById(`c${i}r${j + 3}`).style.backgroundColor == `${player}`) {
-                    alert(`${player} wins`)
-                    location.reload()
-                }
-
-            }
-        }
-
-        for (i = 1; i <= 6; i++) {
-            for (j = 1; j <= 4; j++) {
-                if (document.getElementById(`c${j}r${i}`).style.backgroundColor == `${player}` && document.getElementById(`c${j + 1}r${i}`).style.backgroundColor == `${player}` && document.getElementById(`c${j + 2}r${i}`).style.backgroundColor == `${player}` && document.getElementById(`c${j + 3}r${i}`).style.backgroundColor == `${player}`) {
-                    alert(`${player} wins`)
-                    location.reload()
-                }
-
-            }
-
-        }
-
-        for (i = 1; i <= 4; i++) {
-            for (j = 1; j <= 3; j++) {
-                if (document.getElementById(`c${i}r${j}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 1}r${j + 1}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 2}r${j + 2}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 3}r${j + 3}`).style.backgroundColor == `${player}`) {
-                    alert(`${player} wins`)
-                    location.reload()
-                }
-
-            }
-        }
-
-        for (i = 1; i <= 4; i++) {
-            for (j = 6; j >= 4; j--) {
-                if (document.getElementById(`c${i}r${j}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 1}r${j - 1}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 2}r${j - 2}`).style.backgroundColor == `${player}` && document.getElementById(`c${i + 3}r${j - 3}`).style.backgroundColor == `${player}`) {
-                    alert(`${player} wins`)
-                    location.reload()
-                }
-
-            }
-        }
-
-    }, 200)
-
+function isCell(player, col, row) {
+    return document.getElementById(`c${col}r${row}`).style.backgroundColor === player;
 }
 
-
-
-//playing
-document.querySelectorAll(".column").forEach((e) => {
-    e.addEventListener("click", () => {
-
-        sum = eval(`val_${e.id}`)
-        eval(`val_${e.id}++`)
-
-
-        if (sum <= 6 && turn % 2 != 0) {
-            document.getElementById(`${e.id}r${sum}`).style.backgroundColor = "red"
-            turn++
-            check('red')
-            document.getElementById("whosturn").innerText = "Yellow's Turn"
+function checkWin(player) {
+    // Vertical
+    for (let col = 1; col <= 7; col++) {
+        for (let row = 1; row <= 3; row++) {
+            if (isCell(player, col, row) && isCell(player, col, row + 1) && isCell(player, col, row + 2) && isCell(player, col, row + 3)) {
+                return true;
+            }
         }
-        
-        else if (sum <= 6 && turn % 2 == 0) {
-            document.getElementById(`${e.id}r${sum}`).style.backgroundColor = "yellow"
-            turn++
-            check('yellow')
-            document.getElementById("whosturn").innerText = "Red's Turn"
+    }
 
+    // Horizontal
+    for (let row = 1; row <= 6; row++) {
+        for (let col = 1; col <= 4; col++) {
+            if (isCell(player, col, row) && isCell(player, col + 1, row) && isCell(player, col + 2, row) && isCell(player, col + 3, row)) {
+                return true;
+            }
         }
-       
+    }
 
+    // Diagonal up-right
+    for (let col = 1; col <= 4; col++) {
+        for (let row = 1; row <= 3; row++) {
+            if (isCell(player, col, row) && isCell(player, col + 1, row + 1) && isCell(player, col + 2, row + 2) && isCell(player, col + 3, row + 3)) {
+                return true;
+            }
+        }
+    }
 
+    // Diagonal down-right
+    for (let col = 1; col <= 4; col++) {
+        for (let row = 6; row >= 4; row--) {
+            if (isCell(player, col, row) && isCell(player, col + 1, row - 1) && isCell(player, col + 2, row - 2) && isCell(player, col + 3, row - 3)) {
+                return true;
+            }
+        }
+    }
 
+    return false;
+}
 
-    })
-})
+function isDraw() {
+    return columnHeights.every((height) => height > 6);
+}
+
+function endGame(message) {
+    gameOver = true;
+    setTimeout(() => {
+        alert(message);
+    }, 50);
+}
+
+document.querySelectorAll(".column").forEach((column) => {
+    column.addEventListener("click", () => {
+        if (gameOver) {
+            return;
+        }
+
+        const colNumber = Number(column.id.replace("c", ""));
+        const currentHeight = columnHeights[colNumber - 1];
+
+        if (currentHeight > 6) {
+            return;
+        }
+
+        const player = turn % 2 !== 0 ? "red" : "yellow";
+        document.getElementById(`${column.id}r${currentHeight}`).style.backgroundColor = player;
+        columnHeights[colNumber - 1] = currentHeight + 1;
+
+        if (checkWin(player)) {
+            endGame(`${player.toUpperCase()} wins`);
+            return;
+        }
+
+        if (isDraw()) {
+            endGame("It's a draw");
+            return;
+        }
+
+        turn++;
+        document.getElementById("whosturn").innerText = turn % 2 !== 0 ? "Red's Turn" : "Yellow's Turn";
+    });
+});
+
+document.getElementById("restartBtn").addEventListener("click", () => {
+    location.reload();
+});
 
 

@@ -79,6 +79,16 @@ img {
   width: 200px;
 }
 
+#resetBtn {
+  z-index: 99;
+  padding: 5px;
+  cursor: pointer;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+  width: 200px;
+  margin-top: 8px;
+}
+
 @media (max-width: 1250px) {
   
   #diceCont {

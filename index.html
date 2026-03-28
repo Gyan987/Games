@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All Games</title>
+  <style>
+    :root {
+      --bg: #f5efe6;
+      --card: #fffdf8;
+      --text: #222;
+      --accent: #0f766e;
+      --accent-2: #ea580c;
+      --border: #ddd2c3;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top right, #fde68a, transparent 30%),
+        radial-gradient(circle at bottom left, #bfdbfe, transparent 30%),
+        var(--bg);
+      color: var(--text);
+      padding: 40px 20px;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 12px;
+      font-size: clamp(2rem, 5vw, 3rem);
+    }
+
+    p {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    a {
+      display: block;
+      text-decoration: none;
+      color: var(--text);
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 18px;
+      transition: transform 0.18s ease, border-color 0.18s ease;
+    }
+
+    a:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .name {
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .desc {
+      font-size: 0.95rem;
+      opacity: 0.8;
+    }
+
+    .tip {
+      margin-top: 18px;
+      text-align: center;
+      color: #555;
+    }
+
+    .tip b {
+      color: var(--accent-2);
+    }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <h1>All Games</h1>
+    <p>Choose a game and start playing.</p>
+
+    <section class="grid">
+      <a href="CarGame/index.html">
+        <div class="name">Car Racing</div>
+        <div class="desc">Dodge cars and obstacles while your speed rises.</div>
+      </a>
+
+      <a href="CHESS/index.html">
+        <div class="name">Chess</div>
+        <div class="desc">Classic two-player chess board.</div>
+      </a>
+
+      <a href="Connect4/index.html">
+        <div class="name">Connect 4</div>
+        <div class="desc">Drop pieces to form four in a row.</div>
+      </a>
+
+      <a href="SnakesAndLadder/index.html">
+        <div class="name">Snakes and Ladder</div>
+        <div class="desc">Roll the dice and race to 100.</div>
+      </a>
+
+      <a href="SpellingBee/index.html">
+        <div class="name">Spelling Bee</div>
+        <div class="desc">Listen to words and type the correct spelling.</div>
+      </a>
+
+      <a href="TICTACTOE/index.html">
+        <div class="name">Tic-Tac-Toe</div>
+        <div class="desc">Simple two-player 3x3 strategy game.</div>
+      </a>
+    </section>
+
+    <p class="tip">Tip: open this page in your browser and use <b>Ctrl+Click</b> on cards to open games in new tabs.</p>
+  </main>
+</body>
+
+</html>

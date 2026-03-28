@@ -16,6 +16,15 @@ h2{
     margin-bottom: 20px;
 }
 
+#restartBtn {
+    margin-bottom: 20px;
+    padding: 8px 14px;
+    border: 1px solid #111;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #fff;
+}
+
 .board{
     display: grid;
     grid-template-columns: repeat(7,1fr);

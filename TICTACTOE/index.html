@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+    <title>GyanGames</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,12 +53,19 @@
     #head h1 {
         font-size: 6vmin;
     }
+
+    #reset {
+        margin: 10px auto 0 auto;
+        display: block;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
 </style>
 
 
 <body>
     <div id="head">
-        <h1>TIC-TAC-TOE</h1>
+        <h1>Gyan-TIC-TAC-TOE</h1>
     </div>
 
 
@@ -75,6 +83,7 @@
             <button id="btn8" class="btn" name="tictic-button"></button>
         </div>
     </div>
+    <button id="reset" type="button">Reset Game</button>
 </body>
 
 <script>
@@ -97,11 +106,17 @@
     i = 0
     
 
-    document.getElementById('smallcont').addEventListener('click', function () {
+    function playClick() {
+        clicksound.currentTime = 0
         clicksound.play()
+    }
+
+    document.getElementById('reset').addEventListener('click', function () {
+        location.reload()
     })
     
     document.getElementById('btn0').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn0').innerText = 'X'
@@ -118,6 +133,7 @@
         sum = sum + 1
     })
     document.getElementById('btn1').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn1').innerText = 'X'
@@ -134,6 +150,7 @@
         sum = sum + 1
     })
     document.getElementById('btn2').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn2').innerText = 'X'
@@ -150,6 +167,7 @@
         sum = sum + 1
     })
     document.getElementById('btn3').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn3').innerText = 'X'
@@ -166,6 +184,7 @@
         sum = sum + 1
     })
     document.getElementById('btn4').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn4').innerText = 'X'
@@ -182,6 +201,7 @@
         sum = sum + 1
     })
     document.getElementById('btn5').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn5').innerText = 'X'
@@ -198,6 +218,7 @@
         sum = sum + 1
     })
     document.getElementById('btn6').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn6').innerText = 'X'
@@ -214,6 +235,7 @@
         sum = sum + 1
     })
     document.getElementById('btn7').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn7').innerText = 'X'
@@ -230,6 +252,7 @@
         sum = sum + 1
     })
     document.getElementById('btn8').addEventListener('click', function () {
+        playClick()
 
         if (sum % 2 == 0) {
             document.getElementById('btn8').innerText = 'X'

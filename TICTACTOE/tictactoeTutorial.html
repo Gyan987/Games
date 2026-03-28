@@ -51,6 +51,13 @@
     #head h1 {
         font-size: 6vmin;
     }
+
+    #reset {
+        margin: 10px auto 0 auto;
+        display: block;
+        padding: 8px 16px;
+        cursor: pointer;
+    }
 </style>
 
 <body>
@@ -78,6 +85,8 @@
         </div>
 
     </div>
+
+    <button id="reset" type="button">Reset Game</button>
 
 
 
@@ -111,12 +120,18 @@
     h = 0
     i = 0
 
-    document.getElementById('smallcont').addEventListener('click', function () {
+    function playClick() {
+        clicksound.currentTime = 0
         clicksound.play()
+    }
+
+    document.getElementById('reset').addEventListener('click', function () {
+        location.reload()
     })
 
 
     btn0.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn0.innerText = 'X'
             btn0.disabled = true
@@ -133,6 +148,7 @@
         sum = sum + 1
     })
     btn1.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn1.innerText = 'X'
             btn1.disabled = true
@@ -149,6 +165,7 @@
         sum = sum + 1
     })
     btn2.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn2.innerText = 'X'
             btn2.disabled = true
@@ -165,6 +182,7 @@
         sum = sum + 1
     })
     btn3.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn3.innerText = 'X'
             btn3.disabled = true
@@ -181,6 +199,7 @@
         sum = sum + 1
     })
     btn4.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn4.innerText = 'X'
             btn4.disabled = true
@@ -197,6 +216,7 @@
         sum = sum + 1
     })
     btn5.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn5.innerText = 'X'
             btn5.disabled = true
@@ -213,6 +233,7 @@
         sum = sum + 1
     })
     btn6.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn6.innerText = 'X'
             btn6.disabled = true
@@ -229,6 +250,7 @@
         sum = sum + 1
     })
     btn7.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn7.innerText = 'X'
             btn7.disabled = true
@@ -245,6 +267,7 @@
         sum = sum + 1
     })
     btn8.addEventListener('click', function () {
+        playClick()
         if (sum % 2 == 0) {
             btn8.innerText = 'X'
             btn8.disabled = true

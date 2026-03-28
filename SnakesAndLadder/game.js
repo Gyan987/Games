@@ -6,6 +6,7 @@ let winSound = new Audio('winharpsichord-39642.mp3')
 
 let p1sum = 0
 let p2sum = 0
+let gameEnded = false
 
 
 function play(player, psum, correction, num) {
@@ -149,6 +150,8 @@ function play(player, psum, correction, num) {
     }
 
     else if (sum == 100) {
+        gameEnded = true
+        document.getElementById("diceBtn").disabled = true
         winSound.play()
         if (player == 'p1') {
             alert("Red Won !!")
@@ -200,8 +203,12 @@ function play(player, psum, correction, num) {
 
 
 document.getElementById("diceBtn").addEventListener("click", function () {
+    if (gameEnded) {
+        return
+    }
+
     rollingSound.play()
-    num = Math.floor(Math.random() * (6 - 1 + 1) + 1)
+    let num = Math.floor(Math.random() * (6 - 1 + 1) + 1)
     document.getElementById("dice").innerText = num
 
 
@@ -223,4 +230,8 @@ document.getElementById("diceBtn").addEventListener("click", function () {
 
 
 
+})
+
+document.getElementById("resetBtn").addEventListener("click", function () {
+    location.reload()
 })
