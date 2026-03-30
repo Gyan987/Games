@@ -76,6 +76,23 @@
       top: 15vh;
     }
 
+    /* Buttons: subtle hover and motion to feel hand-tuned */
+    #start, #restart { transition: transform .12s ease, box-shadow .12s ease; }
+    #start:hover, #restart:hover { transform: translateY(-2px) scale(1.03); box-shadow: 0 8px 20px rgba(0,0,0,0.18); }
+
+    /* Player car visual polish and tilt */
+    .mycarimg {
+      will-change: transform, opacity;
+      transition: transform 150ms ease, opacity 180ms ease;
+    }
+    .mycarimg.tilt-left { transform: rotate(-6deg) translateX(-4px); }
+    .mycarimg.tilt-right { transform: rotate(6deg) translateX(4px); }
+    .mycarimg.invulnerable { opacity: 0.6; filter: drop-shadow(0 0 8px rgba(255,80,80,0.18)); }
+
+    /* Small speed bar next to speed text */
+    #speedbar { position: absolute; top: 54px; left: 200px; width: 120px; height: 8px; background: rgba(255,255,255,0.12); border-radius: 8px; overflow: hidden; }
+    #speedbar > i { display: block; height: 100%; width: 30%; background: linear-gradient(90deg,#37d67a,#3ab3ff); transition: width 220ms linear; }
+
     /* Enemy cars now swerve left and right */
     @keyframes ecar1 {
       0% { top: -30vh; left: 200px; }
@@ -108,11 +125,12 @@
 <body>
   <div id="score">Score : 0</div>
   <div id="speed">Speed : 3</div>
+  <div id="speedbar"><i></i></div>
   <div id="lives">Lives : 3</div>
   <button id="start" title="Begin">Let's go!</button>
   <button id="restart">Try again</button>
 
-  <div style="position:absolute; top:70px; right:20px; color:#fff; font-size:0.9rem; text-shadow:0 1px 2px rgba(0,0,0,0.6);">Tip: Arrow keys or WASD to move</div>
+  <div style="position:absolute; top:70px; right:20px; color:#fff; font-size:0.9rem; text-shadow:0 1px 2px rgba(0,0,0,0.6);">Tip: Arrow keys or WASD to move — press 'P' to pause</div>
 
   <div>
     <div id="enemycar1"><img id="ecarimg1" class="ecarimg" src="car2.png"></div>
@@ -132,6 +150,8 @@
     let t = 15, l = 0, speed = 3, lives = 3, n = 0;
     let gameInterval;
     let isInvulnerable = false;
+    let isPaused = false;
+    let tiltTimer = null;
 
     function clamp(value, min, max) {
       return Math.max(min, Math.min(max, value));
@@ -149,11 +169,57 @@
       return !(a.right < b.left || a.left > b.right || a.bottom < b.top || a.top > b.bottom);
     }
 
+    function gameTick() {
+      document.getElementById("score").innerText = `Score : ${String(n).padStart(3,'0')}`;
+      n++;
+
+      // update speed bar
+      try {
+        document.getElementById('speedbar').firstElementChild.style.width = Math.min(100, speed * 10) + '%';
+      } catch (e) {}
+
+      let mycar = document.getElementById("mycarimg").getBoundingClientRect();
+      let e1 = document.getElementById("ecarimg1").getBoundingClientRect();
+      let e2 = document.getElementById("ecarimg2").getBoundingClientRect();
+      let e3 = document.getElementById("ecarimg3").getBoundingClientRect();
+      let e4 = document.getElementById("ecarimg4").getBoundingClientRect();
+      let o1 = document.getElementById("obstacle1").getBoundingClientRect();
+      let o2 = document.getElementById("obstacle2").getBoundingClientRect();
+
+      if (!isInvulnerable && (collide(mycar, e1) || collide(mycar, e2) || collide(mycar, e3) || collide(mycar, e4) || collide(mycar, o1) || collide(mycar, o2))) {
+        isInvulnerable = true;
+        lives--;
+        document.getElementById("lives").innerText = "Lives : " + lives;
+        document.getElementById("mycarimg").classList.add('invulnerable');
+        setTimeout(() => {
+          isInvulnerable = false;
+          document.getElementById("mycarimg").classList.remove('invulnerable');
+        }, 700);
+        if (lives <= 0) {
+          clearInterval(gameInterval);
+          gameInterval = null;
+          alert("Game Over — nice try!");
+          document.getElementById("restart").style.display = 'block';
+          document.getElementById("start").style.display = 'block';
+          document.getElementById("start").innerText = 'Try again';
+        }
+      }
+
+      // Level progression: increase speed every 50 points
+      if (n % 50 === 0) {
+        speed++;
+        document.getElementById("speed").innerText = "Speed : " + speed;
+      }
+    }
+
     function startGame() {
       clearInterval(gameInterval);
+      gameInterval = null;
+      isPaused = false;
       document.getElementById("start").style.display = 'none';
       document.getElementById("restart").style.display = 'none';
       document.getElementById("road").style.animation = 'roadanimation 20s linear infinite';
+      document.getElementById("road").style.animationPlayState = 'running';
       t = 15;
       l = 0;
       lives = 3; n = 0; speed = 3;
@@ -163,44 +229,15 @@
       document.getElementById("speed").innerText = "Speed : " + speed;
 
       // Enemy car animations with swerving
-      document.getElementById("enemycar1").style.animation = 'ecar1 3s linear infinite';
-      document.getElementById("enemycar2").style.animation = 'ecar2 5s linear infinite';
-      document.getElementById("enemycar3").style.animation = 'ecar3 6s linear infinite';
-      document.getElementById("enemycar4").style.animation = 'ecar4 4s linear infinite';
+      ['enemycar1','enemycar2','enemycar3','enemycar4'].forEach((id, idx) => {
+        const speedMap = [3,5,6,4];
+        const anim = `ecar${idx+1} ${speedMap[idx]}s linear infinite`;
+        document.getElementById(id).style.animation = anim;
+        document.getElementById(id).style.animationPlayState = 'running';
+      });
 
       // Score & collision loop
-      gameInterval = setInterval(() => {
-        document.getElementById("score").innerText = `Score : ${n}`;
-        n++;
-
-        let mycar = document.getElementById("mycarimg").getBoundingClientRect();
-        let e1 = document.getElementById("ecarimg1").getBoundingClientRect();
-        let e2 = document.getElementById("ecarimg2").getBoundingClientRect();
-        let e3 = document.getElementById("ecarimg3").getBoundingClientRect();
-        let e4 = document.getElementById("ecarimg4").getBoundingClientRect();
-        let o1 = document.getElementById("obstacle1").getBoundingClientRect();
-        let o2 = document.getElementById("obstacle2").getBoundingClientRect();
-
-        if (!isInvulnerable && (collide(mycar, e1) || collide(mycar, e2) || collide(mycar, e3) || collide(mycar, e4) || collide(mycar, o1) || collide(mycar, o2))) {
-          isInvulnerable = true;
-          lives--;
-          document.getElementById("lives").innerText = "Lives : " + lives;
-          setTimeout(() => {
-            isInvulnerable = false;
-          }, 700);
-          if (lives <= 0) {
-            clearInterval(gameInterval);
-            alert("Game Over — nice try!");
-            document.getElementById("restart").style.display = 'block';
-          }
-        }
-
-        // Level progression: increase speed every 50 points
-        if (n % 50 === 0) {
-          speed++;
-          document.getElementById("speed").innerText = "Speed : " + speed;
-        }
-      }, 100);
+      gameInterval = setInterval(gameTick, 100);
     }
 
     document.getElementById("start").addEventListener("click", startGame);
@@ -208,18 +245,48 @@
 
     // Controls
     window.addEventListener("keydown", function (x) {
+      // Toggle pause with 'P'
+      if (x.keyCode == 80) {
+        if (gameInterval) {
+          clearInterval(gameInterval);
+          gameInterval = null;
+          isPaused = true;
+          document.getElementById("road").style.animationPlayState = 'paused';
+          ['enemycar1','enemycar2','enemycar3','enemycar4'].forEach(id => {
+            document.getElementById(id).style.animationPlayState = 'paused';
+          });
+          document.getElementById("start").style.display = 'block';
+          document.getElementById("start").innerText = 'Resume';
+        } else {
+          // resume
+          if (!isPaused) return; // if never started, ignore
+          gameInterval = setInterval(gameTick, 100);
+          isPaused = false;
+          document.getElementById("road").style.animationPlayState = 'running';
+          ['enemycar1','enemycar2','enemycar3','enemycar4'].forEach(id => {
+            document.getElementById(id).style.animationPlayState = 'running';
+          });
+          document.getElementById("start").style.display = 'none';
+          document.getElementById("start").innerText = "Let's go!";
+        }
+        return;
+      }
+
+      if (!gameInterval) return; // ignore movement when game not running
+
       if (x.keyCode == 38) t -= speed; // Up
       if (x.keyCode == 40) t += speed; // Down
-      if (x.keyCode == 37) l -= speed; // Left
-      if (x.keyCode == 39) l += speed; // Right
+      if (x.keyCode == 37) { l -= speed; document.getElementById('mycarimg').classList.add('tilt-left'); clearTimeout(tiltTimer); tiltTimer = setTimeout(()=>{document.getElementById('mycarimg').classList.remove('tilt-left');},160);} // Left
+      if (x.keyCode == 39) { l += speed; document.getElementById('mycarimg').classList.add('tilt-right'); clearTimeout(tiltTimer); tiltTimer = setTimeout(()=>{document.getElementById('mycarimg').classList.remove('tilt-right');},160);} // Right
       if (x.keyCode == 87) t -= speed; // W
       if (x.keyCode == 83) t += speed; // S
-      if (x.keyCode == 65) l -= speed; // A
-      if (x.keyCode == 68) l += speed; // D
+      if (x.keyCode == 65) { l -= speed; document.getElementById('mycarimg').classList.add('tilt-left'); clearTimeout(tiltTimer); tiltTimer = setTimeout(()=>{document.getElementById('mycarimg').classList.remove('tilt-left');},160);} // A
+      if (x.keyCode == 68) { l += speed; document.getElementById('mycarimg').classList.add('tilt-right'); clearTimeout(tiltTimer); tiltTimer = setTimeout(()=>{document.getElementById('mycarimg').classList.remove('tilt-right');},160);} // D
       if (x.keyCode == 187) speed++;   // '+'
       if (x.keyCode == 189 && speed > 1) speed--; // '-'
       setMyCarPosition();
       document.getElementById("speed").innerText = "Speed : " + speed;
+      try { document.getElementById('speedbar').firstElementChild.style.width = Math.min(100, speed*10) + '%'; } catch(e) {}
     });
   </script>
 </body>
