@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A tiny car racing game — short, fun, and a little competitive.">
   <title>Car Racing Game</title>
   <style>
     * { margin: 0; padding: 0; }
@@ -44,9 +45,16 @@
     #score { left: 20px; }
     #speed { left: 200px; }
     #lives { left: 380px; }
-    .ecarimg, .mycarimg, .obstacle {
+    .ecarimg, .obstacle {
       width: 80px;
-      border: 2px solid red;
+      border: 2px solid rgba(0,0,0,0.08);
+    }
+    .mycarimg {
+      width: 90px;
+      border: 2px solid rgba(40,150,200,0.95);
+      border-radius: 8px;
+      box-shadow: 0 6px 18px rgba(40,150,200,0.18);
+      transition: transform 150ms ease;
     }
     .obstacle {
       width: 60px;
@@ -101,8 +109,10 @@
   <div id="score">Score : 0</div>
   <div id="speed">Speed : 3</div>
   <div id="lives">Lives : 3</div>
-  <button id="start">Start</button>
-  <button id="restart">Restart</button>
+  <button id="start" title="Begin">Let's go!</button>
+  <button id="restart">Try again</button>
+
+  <div style="position:absolute; top:70px; right:20px; color:#fff; font-size:0.9rem; text-shadow:0 1px 2px rgba(0,0,0,0.6);">Tip: Arrow keys or WASD to move</div>
 
   <div>
     <div id="enemycar1"><img id="ecarimg1" class="ecarimg" src="car2.png"></div>
@@ -180,7 +190,7 @@
           }, 700);
           if (lives <= 0) {
             clearInterval(gameInterval);
-            alert("GAME OVER!");
+            alert("Game Over — nice try!");
             document.getElementById("restart").style.display = 'block';
           }
         }
