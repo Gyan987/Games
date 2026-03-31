@@ -4,6 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A small collection of browser games." />
   <title>All Games</title>
   <style>
     :root {
@@ -20,6 +21,30 @@
       margin: 0;
       padding: 0;
       font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    /* Skip link (visually hidden until focused) */
+    .skip-link {
+      position: absolute;
+      left: -999px;
+      top: auto;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+    }
+
+    .skip-link:focus,
+    .skip-link:active {
+      position: static;
+      width: auto;
+      height: auto;
+      margin: 8px 0 16px;
+      padding: 8px 12px;
+      background: var(--accent);
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.12);
     }
 
     body {
@@ -68,6 +93,12 @@
     a:hover {
       transform: translateY(-2px);
       border-color: var(--accent);
+    }
+
+    /* Clear keyboard focus styles for accessibility */
+    a:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 3px;
     }
 
     .name {
